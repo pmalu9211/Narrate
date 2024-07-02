@@ -7,7 +7,7 @@ export const SiginCard = () => {
   return (
     <>
       <div className=" top-0 backdrop-filter backdrop-blur-md z-10 fixed h-screen w-screen flex items-center justify-center">
-        <div className="w-4/12">
+        <div className="lg:w-4/12 md:w-6/12">
           <SigninForm />
           <div
             onClick={() => setShowSiginCard(false)}

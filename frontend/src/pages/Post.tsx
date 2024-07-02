@@ -1,7 +1,8 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Loader } from "../components/Loader";
+import { notifyError, notifySuccess } from "../toast/toast";
 
 export const Post = () => {
   const { pathname } = useLocation();
@@ -26,6 +27,8 @@ export const Post = () => {
         })
         .catch((e) => {
           setLoading(false);
+          notifyError(e.response.data.message);
+
           console.log(e);
         });
     }
@@ -41,9 +44,11 @@ export const Post = () => {
       });
       setLoading(false);
       navigate("/");
+      notifySuccess(response.data.message);
       console.log(response);
-    } catch (e) {
+    } catch (er: any) {
       setLoading(false);
+      notifyError(er.response.data.message);
       console.log(e);
     }
   };
@@ -60,8 +65,10 @@ export const Post = () => {
       });
       setLoading(false);
       navigate("/profile");
+      notifySuccess(response.data.message);
       console.log(response);
-    } catch (e) {
+    } catch (e: any) {
+      notifyError(e.response.data.message);
       setLoading(false);
       console.log(e);
     }
@@ -75,19 +82,22 @@ export const Post = () => {
       console.log(response);
       navigate("/profile");
       setLoading(false);
-    } catch (e) {
+      notifySuccess(response.data.message);
+    } catch (e: any) {
       setLoading(false);
       console.log(e);
+      notifyError(e.response.data.message);
     }
   };
   return (
     <>
+      {" "}
       {Loading && <Loader />}
       <div>
         <div className="text-5xl font-extralight font-playwrite text-center mt-8">
           Narrate it
         </div>
-        <form className="p-16">
+        <form className="md:p-16 p-8">
           <div className="w-full border border-gray-300 rounded-2xl p-8 my-8">
             <div className="ml-4 text-3xl mt-4">Title</div>
             <input
@@ -102,7 +112,7 @@ export const Post = () => {
               className="w-full border border-gray-300 rounded-2xl px-3 py-3 my-2 font-poppins text-xl"
               value={content}
             />
-            <div className="flex">
+            <div className="md:flex">
               <div className="ml-4 text-3xl mt-4">Minutes required to read</div>
               <input
                 onChange={(e) => setReadingTime(Number(e.target.value))}

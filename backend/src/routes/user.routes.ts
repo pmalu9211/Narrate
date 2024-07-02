@@ -30,6 +30,17 @@ userRouter.post("/signup", async (c) => {
     datasourceUrl: c.env?.DATABASE_URL,
   }).$extends(withAccelerate());
 
+  const checkUser = await prisma.user.findFirst({
+    where: {
+      email: body.email,
+    },
+  });
+
+  if (checkUser) {
+    c.status(400);
+    return c.json({ message: "User already exists" });
+  }
+
   const hashedPassword = bcrypt.hashSync(body.password, 10);
   try {
     await prisma.user.create({
@@ -41,10 +52,11 @@ userRouter.post("/signup", async (c) => {
     });
 
     c.status(200);
-    return c.json({ message: "signup successful !" });
+    return c.json({ message: "signup successful!" });
   } catch (e) {
     console.log(e);
-    return c.text("Went wrong", 402);
+    c.status(400);
+    return c.json({ message: "Try again(smt Went wrong)" });
   }
 });
 
@@ -111,7 +123,7 @@ userRouter.post("/signin", async (c) => {
   } catch (e) {
     console.log(e);
     c.status(402);
-    return c.text("Went wrong");
+    return c.json({ message: "Try again(smt Went wrong)" });
   }
 });
 
@@ -119,7 +131,7 @@ userRouter.use("*", async (c, next) => {
   const authHeader = getCookie(c, "token");
   if (!authHeader) {
     c.status(403);
-    return c.json({ message: "not logged in" });
+    return c.json({ message: "Please log in" });
   }
   try {
     const user = await verify(authHeader, c.env.JWT_PRIVATE);
@@ -181,7 +193,7 @@ userRouter.get("/profile", async (c) => {
     return c.json({ userDoc, blogs });
   } catch (e) {
     console.log(e);
-    return c.text("Went wrong", 402);
+    return c.json({ message: "User not logged in" });
   }
 });
 
@@ -207,7 +219,8 @@ userRouter.put("/update", async (c) => {
     return c.json({ message: "updated successfully" });
   } catch (e) {
     console.log(e);
-    return c.text("Went wrong", 402);
+    c.status(412);
+    return c.json({ message: "Unable to update profile" });
   }
 });
 

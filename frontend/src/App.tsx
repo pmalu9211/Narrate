@@ -9,13 +9,16 @@ import { Error } from "./pages/Error.tsx";
 import axios from "axios";
 import { Post } from "./pages/Post.tsx";
 import { Profile } from "./pages/Profile.tsx";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
-  axios.defaults.baseURL = "http://127.0.0.1:8787/api/v1";
+  axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
   axios.defaults.withCredentials = true;
   return (
     <>
       <BrowserRouter>
+        <ToastContainer />
         <Routes>
           <Route path="/signup" element={<Signup />} />
           <Route path="/signin" element={<Signin />} />

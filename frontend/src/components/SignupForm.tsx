@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Loader } from "./Loader";
+import { notifyError, notifySuccess } from "../toast/toast";
 
 export const SignupForm = () => {
   const [name, setName] = useState("");
@@ -22,7 +23,9 @@ export const SignupForm = () => {
       console.log(response);
       setLoading(false);
       navigate("/signin");
-    } catch (e) {
+      notifySuccess(response.data.message);
+    } catch (e: any) {
+      notifyError(e.response.data.message);
       console.log(e);
       setLoading(false);
     }

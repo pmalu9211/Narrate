@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import { currentUser, showSiginCard } from "../recoil/state";
 import { Loader } from "./Loader";
+import { notifyError, notifySuccess } from "../toast/toast";
 
 export const SigninForm = () => {
   const [email, setEmail] = useState("");
@@ -26,9 +27,11 @@ export const SigninForm = () => {
       setSigninCard(false);
       setLoading(false);
       navigate("/");
-    } catch (e) {
+      notifySuccess(response.data.message);
+    } catch (e: any) {
       setLoading(false);
       console.log(e);
+      notifyError(e.response.data.message);
     }
   };
   return (

@@ -5,7 +5,7 @@ import { useRecoilState, useSetRecoilState } from "recoil";
 import { currentUser, showSiginCard } from "../recoil/state";
 import { useMemo, useState } from "react";
 import { Loader } from "./Loader";
-
+import { notifyError, notifySuccess } from "../toast/toast";
 export const Navbar = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -20,13 +20,15 @@ export const Navbar = () => {
   const logout = async () => {
     try {
       setLoading(true);
-      await axios.post("/user/logout", {});
+      const response = await axios.post("/user/logout", {});
       setCurrentUser(undefined);
       setLoading(false);
+      notifySuccess(response.data.message);
       navigate("/signin");
-    } catch (e) {
+    } catch (e: any) {
       setLoading(false);
       console.log(e);
+      notifyError(e.response.data.message);
     }
   };
 
@@ -34,8 +36,8 @@ export const Navbar = () => {
   return (
     <>
       {Loading && <Loader />}
-      <div className="grid grid-cols-3 gap-4 w-full py-6 px-4  border-black items-center ">
-        <Link to={"/"} className="font-poppins font-bold text-4xl ">
+      <div className="grid grid-cols-3 gap-4 min-w-full py-6 px-2 sm:px-4  border-black items-center ">
+        <Link to={"/"} className="font-poppins font-bold text-4xl  ">
           Narrate
         </Link>
 
@@ -46,18 +48,18 @@ export const Navbar = () => {
               setShowSiginCard(true);
             }
           }}
-          className="font-poppins text-2xl border-2 border-black rounded-full py-2 px-6 font-semibold m-auto shadow-stone-300 shadow-lg hover:bg-black hover:text-white"
+          className="font-poppins text-2xl border-2 border-black rounded-full py-2 sm:px-6 px-4 font-semibold m-auto shadow-stone-300 shadow-lg hover:bg-black hover:text-white "
         >
           post
         </Link>
         {pathname === "/profile" ? (
-          <button onClick={logout} className="ml-auto w-32 bg-red-500 my-0">
+          <button onClick={logout} className="ml-auto max-w-32 bg-red-500 my-0">
             Logout
           </button>
         ) : currentUserVal ? (
           <Link
             to={"/profile"}
-            className="ml-auto flex gap-2  py-2 px-4 font-poppins border border-gray-400 rounded-3xl"
+            className="ml-auto flex gap-2  py-2 px-4 font-poppins border border-gray-400 rounded-3xl min-w-1"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -65,7 +67,7 @@ export const Navbar = () => {
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="size-8 "
+              className="size-8 hidden sm:visible"
             >
               <path
                 strokeLinecap="round"
@@ -78,7 +80,7 @@ export const Navbar = () => {
         ) : (
           <button
             onClick={() => navigate("/signin")}
-            className="ml-auto w-32 bg-black text-white"
+            className="ml-auto max-w-32 bg-black text-white"
           >
             {" "}
             Sign in

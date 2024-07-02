@@ -6,6 +6,7 @@ import { SiginCard } from "../components/SigninCard";
 import { currentUser, showSiginCard } from "../recoil/state";
 import { useRecoilState } from "recoil";
 import { Loader } from "../components/Loader";
+import { notifyError } from "../toast/toast";
 
 export const Home = () => {
   const [blogs, setBlogs]: [Blog[], any] = useState([]);
@@ -20,9 +21,10 @@ export const Home = () => {
       const response = await axios("/blog/bulk");
       setBlogs(response.data.doc);
       setLoading(false);
-    } catch (e) {
+    } catch (e: any) {
       console.log(e);
       setLoading(false);
+      notifyError(e.response.data.message);
     }
   };
 
@@ -49,6 +51,7 @@ export const Home = () => {
     <>
       {Loading && <Loader />}
       {showSiginCardVal && <SiginCard />}
+
       <div className="min-h-screen font-poppins p-4">
         {blogs.map((blog: Blog) => {
           return (
@@ -59,8 +62,9 @@ export const Home = () => {
                   setShowSiginCard(true);
                 }
               }}
+              key={blog.id}
             >
-              <BlogComp key={blog.id} blog={blog} />
+              <BlogComp blog={blog} />
             </div>
           );
         })}

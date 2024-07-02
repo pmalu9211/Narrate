@@ -4,6 +4,7 @@ import axios from "axios";
 import { Blog, UserInterface } from "../types";
 import { useNavigate } from "react-router-dom";
 import { Loader } from "../components/Loader";
+import { notifyError, notifySuccess } from "../toast/toast";
 
 export const Profile = () => {
   const [blogs, setBlogs]: [Blog[], any] = useState([]);
@@ -34,11 +35,12 @@ export const Profile = () => {
     try {
       setLoading(true);
       axios.put("/user/update", { name, about });
-      alert("Profile Updated");
       setLoading(false);
-    } catch (e) {
+      notifySuccess("Profile Updated");
+    } catch (e: any) {
       setLoading(false);
       console.log(e);
+      notifyError(e.response.data.message);
     }
   }; //TODO: updateProfile
 
@@ -49,7 +51,7 @@ export const Profile = () => {
   return (
     <>
       {Loading && <Loader />}
-      <div className="grid grid-cols-3">
+      <div className="grid lg:grid-cols-3 grid-cols-1 lg:w-full  md:w-8/12 mx-auto">
         <form className="p-4">
           <div className="text-5xl font-extralight font-playwrite text-center mt-8">
             Profile
