@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.font-poppins {
+  font-family: "Poppins", sans-serif;
+}
+
+.font-playwrite {
+  font-family: "Playwrite IT Moderna", cursive !important;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="tel"] {
+  @apply w-full border border-gray-300 rounded-2xl px-3 py-3 my-2 font-poppins text-xl;
+}
+
+label {
+  @apply text-2xl font-poppins;
+}
+
+button {
+  @apply w-full px-3 py-2 my-2 bg-black text-white rounded-full text-2xl font-poppins;
+}
+
+.truncate-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3; /* Number of lines to show */
+  overflow: hidden;
+}
+
+.lineHeight {
+  line-height: 4rem;
+}

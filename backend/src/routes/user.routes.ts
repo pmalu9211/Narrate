@@ -1,0 +1,208 @@
+import { PrismaClient } from "@prisma/client/edge";
+import { withAccelerate } from "@prisma/extension-accelerate";
+import { Hono } from "hono";
+import { sign, verify } from "hono/jwt";
+import { signinInput, signupInput } from "@prathamalu/medium-common";
+import { deleteCookie, getCookie, setCookie } from "hono/cookie";
+
+export const userRouter = new Hono<{
+  Bindings: {
+    DATABASE_URL: string;
+    JWT_PRIVATE: string;
+  };
+  Variables: {
+    userId: number;
+  };
+}>();
+
+userRouter.post("/signup", async (c) => {
+  const body = await c.req.json();
+  const { success } = signupInput.safeParse(body);
+
+  if (!success) {
+    c.status(411);
+    return c.json({
+      message: "the inputs are incorrect",
+    });
+  }
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env?.DATABASE_URL,
+  }).$extends(withAccelerate());
+
+  try {
+    await prisma.user.create({
+      data: {
+        email: body.email,
+        name: body.name,
+        password: body.password,
+      },
+    });
+
+    c.status(200);
+    return c.json({ message: "signup successful !" });
+  } catch (e) {
+    console.log(e);
+    return c.text("Went wrong", 402);
+  }
+});
+
+userRouter.post("/signin", async (c) => {
+  const body = await c.req.json();
+  const { success } = signinInput.safeParse(body);
+
+  if (!success) {
+    c.status(411);
+    return c.json({
+      message: "the inputs are incorrect",
+    });
+  }
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env?.DATABASE_URL,
+  }).$extends(withAccelerate());
+
+  try {
+    const user = await prisma.user.findFirst({
+      where: {
+        email: body.email,
+        password: body.password,
+      },
+    });
+
+    if (!user) {
+      c.status(401);
+      return c.json({ message: "The credentials must be wrong" });
+    }
+
+    const token = await sign({ id: user.id }, c.env.JWT_PRIVATE);
+    setCookie(c, "token", token, {
+      // path: "/",
+      secure: true,
+      // domain: 'example.com',
+      // httpOnly: true,
+      maxAge: 3456000,
+      // expires: new Date(Date.UTC(2025, 1, 24, 10, 30, 59, 900)),
+      sameSite: "None",
+    });
+    c.status(200);
+    return c.json({ message: "signin successful !" });
+  } catch (e) {
+    console.log(e);
+    c.status(402);
+    return c.text("Went wrong");
+  }
+});
+
+userRouter.use("*", async (c, next) => {
+  const authHeader = getCookie(c, "token");
+  if (!authHeader) {
+    c.status(403);
+    return c.json({ message: "not logged in" });
+  }
+  try {
+    const user = await verify(authHeader, c.env.JWT_PRIVATE);
+
+    if (user.id) {
+      console.log("Authenticated user ID:", user.id);
+      c.set("userId", Number(user.id));
+      await next();
+    } else {
+      return c.json({ message: "You are not logged in" }, 403);
+    }
+  } catch (error) {
+    console.error("Authentication error:", error);
+    return c.json({ message: "Authentication failed" }, 403);
+  }
+});
+
+userRouter.get("/auth", async (c) => {
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env?.DATABASE_URL,
+  }).$extends(withAccelerate());
+  try {
+    const userDoc = await prisma.user.findFirst({
+      select: {
+        name: true,
+        about: true,
+      },
+      where: {
+        id: c.get("userId"),
+      },
+    });
+    c.status(200);
+    return c.json({ userDoc });
+  } catch (e) {
+    c.status(402);
+    return c.json({ message: "User not logged in" });
+  }
+});
+
+userRouter.get("/profile", async (c) => {
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env?.DATABASE_URL,
+  }).$extends(withAccelerate());
+
+  try {
+    const userDoc = await prisma.user.findFirst({
+      where: {
+        id: c.get("userId"),
+      },
+    });
+
+    const blogs = await prisma.blog.findMany({
+      where: {
+        authorId: c.get("userId"),
+      },
+    });
+
+    c.status(200);
+    return c.json({ userDoc, blogs });
+  } catch (e) {
+    console.log(e);
+    return c.text("Went wrong", 402);
+  }
+});
+
+userRouter.put("/update", async (c) => {
+  const body = await c.req.json();
+
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env?.DATABASE_URL,
+  }).$extends(withAccelerate());
+
+  try {
+    await prisma.user.update({
+      where: {
+        id: c.get("userId"),
+      },
+      data: {
+        name: body.name,
+        about: body.about,
+      },
+    });
+
+    c.status(200);
+    return c.json({ message: "updated successfully" });
+  } catch (e) {
+    console.log(e);
+    return c.text("Went wrong", 402);
+  }
+});
+
+userRouter.post("/logout", async (c) => {
+  try {
+    deleteCookie(c, "token", {
+      // path: "/",
+      secure: true,
+      // domain: 'example.com',
+      // httpOnly: true,
+      maxAge: 3456000,
+      // expires: new Date(Date.UTC(2025, 1, 24, 10, 30, 59, 900)),
+      sameSite: "None",
+    });
+    c.status(200);
+    return c.json({ message: "logged out successfully" });
+  } catch (e) {
+    c.status(412);
+    return c.json({ message: "Unable to logout" });
+  }
+});
