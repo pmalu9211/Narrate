@@ -4,6 +4,7 @@ import { Hono } from "hono";
 import { sign, verify } from "hono/jwt";
 import { signinInput, signupInput } from "@prathamalu/medium-common";
 import { deleteCookie, getCookie, setCookie } from "hono/cookie";
+import bcrypt from "bcryptjs";
 
 export const userRouter = new Hono<{
   Bindings: {
@@ -29,12 +30,13 @@ userRouter.post("/signup", async (c) => {
     datasourceUrl: c.env?.DATABASE_URL,
   }).$extends(withAccelerate());
 
+  const hashedPassword = bcrypt.hashSync(body.password, 10);
   try {
     await prisma.user.create({
       data: {
         email: body.email,
         name: body.name,
-        password: body.password,
+        password: hashedPassword,
       },
     });
 
@@ -60,20 +62,41 @@ userRouter.post("/signin", async (c) => {
     datasourceUrl: c.env?.DATABASE_URL,
   }).$extends(withAccelerate());
 
+  const user = await prisma.user.findFirst({
+    where: {
+      email: body.email,
+    },
+  });
+
+  if (!user) {
+    c.status(401);
+    return c.json({ message: "User not found" });
+  }
+
+  const validPassword = bcrypt.compareSync(body.password, user.password);
+  if (!validPassword) {
+    c.status(401);
+    return c.json({ message: "The password is incorrect" });
+  }
+
   try {
-    const user = await prisma.user.findFirst({
+    const userDoc = await prisma.user.findFirst({
+      select: {
+        id: true,
+        name: true,
+        about: true,
+      },
       where: {
         email: body.email,
-        password: body.password,
       },
     });
 
-    if (!user) {
+    if (!userDoc) {
       c.status(401);
       return c.json({ message: "The credentials must be wrong" });
     }
 
-    const token = await sign({ id: user.id }, c.env.JWT_PRIVATE);
+    const token = await sign({ id: userDoc.id }, c.env.JWT_PRIVATE);
     setCookie(c, "token", token, {
       // path: "/",
       secure: true,
@@ -84,7 +107,7 @@ userRouter.post("/signin", async (c) => {
       sameSite: "None",
     });
     c.status(200);
-    return c.json({ message: "signin successful !" });
+    return c.json({ message: "signin successful !", userDoc });
   } catch (e) {
     console.log(e);
     c.status(402);
