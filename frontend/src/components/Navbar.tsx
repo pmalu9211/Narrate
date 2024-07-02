@@ -2,9 +2,9 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { currentUser, showSiginCard, user } from "../recoil/state";
-import { useMemo } from "react";
-import { UserInterface } from "../types";
+import { currentUser, showSiginCard } from "../recoil/state";
+import { useMemo, useState } from "react";
+import { Loader } from "./Loader";
 
 export const Navbar = () => {
   const { pathname } = useLocation();
@@ -15,13 +15,17 @@ export const Navbar = () => {
   let postRedirect = useMemo(() => {
     return currentUserVal ? "/post" : "";
   }, [currentUserVal]);
+  const [Loading, setLoading] = useState(false);
 
   const logout = async () => {
     try {
+      setLoading(true);
       await axios.post("/user/logout", {});
       setCurrentUser(undefined);
+      setLoading(false);
       navigate("/signin");
     } catch (e) {
+      setLoading(false);
       console.log(e);
     }
   };
@@ -29,6 +33,7 @@ export const Navbar = () => {
   // if (userVal.state === "hasError") return <div>Loading...</div>;
   return (
     <>
+      {Loading && <Loader />}
       <div className="grid grid-cols-3 gap-4 w-full py-6 px-4  border-black items-center ">
         <Link to={"/"} className="font-poppins font-bold text-4xl ">
           Narrate

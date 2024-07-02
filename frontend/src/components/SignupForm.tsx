@@ -1,30 +1,36 @@
 import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { Loader } from "./Loader";
 
 export const SignupForm = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const [Loading, setLoading] = useState(false);
 
   const submitHandler = async (e: any) => {
     e.preventDefault();
     try {
+      setLoading(true);
       const response = await axios.post("/user/signup", {
         name,
         email,
         password,
       });
       console.log(response);
+      setLoading(false);
       navigate("/signin");
     } catch (e) {
       console.log(e);
+      setLoading(false);
     }
   };
 
   return (
     <>
+      {Loading && <Loader />}
       <div className="flex flex-col m-8">
         <form className="border-2 border-black rounded-2xl p-8 m-4 my-auto">
           <div className="text-center text-3xl font-semibold font-playwrite ">

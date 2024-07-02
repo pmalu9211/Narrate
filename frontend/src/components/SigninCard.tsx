@@ -6,7 +6,7 @@ export const SiginCard = () => {
   const setShowSiginCard = useSetRecoilState<boolean>(showSiginCard);
   return (
     <>
-      <div className=" top-0 backdrop-filter backdrop-blur-md z-50 fixed h-screen w-screen flex items-center justify-center">
+      <div className=" top-0 backdrop-filter backdrop-blur-md z-10 fixed h-screen w-screen flex items-center justify-center">
         <div className="w-4/12">
           <SigninForm />
           <div

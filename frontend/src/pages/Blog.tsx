@@ -2,22 +2,27 @@ import { useEffect, useState } from "react";
 import { Blog as BlogType, UserInterface } from "../types";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { Loader } from "../components/Loader";
 
 export const Blog = () => {
   const id = useParams().id;
   const [blog, setBlog] = useState({} as BlogType);
   const [user, setUser] = useState({} as UserInterface);
   const date = new Date(blog.createdAt);
+  const [Loading, setLoading] = useState(false);
 
   useEffect(() => {
+    setLoading(true);
     axios.get(`/blog/${id}`).then((res) => {
       setBlog(res.data.doc);
       setUser(res.data.userDoc);
+      setLoading(false);
       console.log(res.data);
     });
   }, []);
   return (
     <>
+      {Loading && <Loader />}
       <div className="min-h-screen font-poppins ">
         <div className="ml-6 text-left my-8 text-4xl font-semibold ">
           {blog.title}

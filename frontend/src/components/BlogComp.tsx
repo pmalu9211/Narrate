@@ -20,7 +20,7 @@ export const BlogComp = ({ blog }: { blog: Blog }) => {
   return (
     <Link
       to={String(redirect)}
-      className="border border-neutral-200 rounded-xl p-8 mt-4 block"
+      className="border border-neutral-300 rounded-xl p-8 mt-4 block"
     >
       <div className=" flex items-center gap-3 mb-2">
         <div className="border border-neutral-600 rounded-full p-1">

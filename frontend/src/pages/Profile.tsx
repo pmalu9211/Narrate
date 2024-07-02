@@ -3,22 +3,28 @@ import { BlogComp } from "../components/BlogComp";
 import axios from "axios";
 import { Blog, UserInterface } from "../types";
 import { useNavigate } from "react-router-dom";
+import { Loader } from "../components/Loader";
 
 export const Profile = () => {
   const [blogs, setBlogs]: [Blog[], any] = useState([]);
   const [, setUser] = useState({} as UserInterface);
   const [name, setName] = useState("");
   const [about, setAbout] = useState("");
+  const [Loading, setLoading] = useState(false);
+
   // const navigate = useNavigate();
 
   const getProfile = async () => {
     try {
+      setLoading(true);
       const response = await axios("/user/profile");
       setBlogs(response.data.blogs);
       setUser(response.data.userDoc);
       setName(response.data.userDoc.name);
       setAbout(response.data.userDoc.about);
+      setLoading(false);
     } catch (e) {
+      setLoading(false);
       console.log(e);
     }
   };
@@ -26,9 +32,12 @@ export const Profile = () => {
   const updateProfile = async (e: any) => {
     e.preventDefault();
     try {
+      setLoading(true);
       axios.put("/user/update", { name, about });
       alert("Profile Updated");
+      setLoading(false);
     } catch (e) {
+      setLoading(false);
       console.log(e);
     }
   }; //TODO: updateProfile
@@ -39,6 +48,7 @@ export const Profile = () => {
 
   return (
     <>
+      {Loading && <Loader />}
       <div className="grid grid-cols-3">
         <form className="p-4">
           <div className="text-5xl font-extralight font-playwrite text-center mt-8">
