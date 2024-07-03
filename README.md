@@ -1,7 +1,4 @@
 Blogging Platform
-Repository: GitHub Repo
-
-Deployed Link: Website
 
 Database: Leveraged PostgreSQL for robust data management, ensuring strictness and consistency. Utilized Prisma ORM alongside Prisma Accelerate for effective caching and connection pooling.
 
