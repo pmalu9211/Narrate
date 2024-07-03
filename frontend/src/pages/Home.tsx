@@ -7,6 +7,7 @@ import { currentUser, showSiginCard } from "../recoil/state";
 import { useRecoilState } from "recoil";
 import { Loader } from "../components/Loader";
 import { notifyError } from "../toast/toast";
+import { FunctionalButton } from "../components/FunctionalButton";
 
 export const Home = () => {
   const [blogs, setBlogs]: [Blog[], any] = useState([]);
@@ -51,7 +52,9 @@ export const Home = () => {
     <>
       {Loading && <Loader />}
       {showSiginCardVal && <SiginCard />}
-
+      <div className="md:hidden">
+        <FunctionalButton />
+      </div>
       <div className="min-h-screen font-poppins p-4">
         {blogs.map((blog: Blog) => {
           return (

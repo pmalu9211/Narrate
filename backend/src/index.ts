@@ -20,5 +20,14 @@ app.use(
 );
 app.route("/api/v1/user", userRouter);
 app.route("/api/v1/blog", blogRouter);
+app.get("api/v1/healthCheck", async (c) => {
+  try {
+    c.status(200);
+    return c.json({ message: "OK" });
+  } catch (e) {
+    console.log(e);
+    c.status(500);
+  }
+});
 
 export default app;

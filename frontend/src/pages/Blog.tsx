@@ -23,6 +23,7 @@ export const Blog = () => {
         console.log(res.data);
       })
       .catch((e: any) => {
+        setLoading(false);
         notifyError(e.response.data.message);
       });
   }, []);

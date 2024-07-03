@@ -9,7 +9,7 @@ export const Post = () => {
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [readingTime, setReadingTime] = useState(4);
+  const [readingTime, setReadingTime] = useState(0 as number);
   const navigate = useNavigate();
   const blogId = useParams().id;
   const [Loading, setLoading] = useState(false);
@@ -113,7 +113,7 @@ export const Post = () => {
               value={content}
             />
             <div className="md:flex">
-              <div className="ml-4 text-3xl mt-4">Minutes required to read</div>
+              <div className="ml-4 text-3xl mt-4">Reading time (mins)</div>
               <input
                 onChange={(e) => setReadingTime(Number(e.target.value))}
                 className="border border-gray-300 ml-3 rounded-lg px-3 py-3 my-2 font-poppins text-xl"

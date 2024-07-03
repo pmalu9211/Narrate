@@ -21,7 +21,7 @@ userRouter.post("/signup", async (c) => {
   const { success } = signupInput.safeParse(body);
 
   if (!success) {
-    c.status(411);
+    c.status(400);
     return c.json({
       message: "the inputs are incorrect",
     });
@@ -55,7 +55,7 @@ userRouter.post("/signup", async (c) => {
     return c.json({ message: "signup successful!" });
   } catch (e) {
     console.log(e);
-    c.status(400);
+    c.status(501);
     return c.json({ message: "Try again(smt Went wrong)" });
   }
 });
@@ -65,7 +65,7 @@ userRouter.post("/signin", async (c) => {
   const { success } = signinInput.safeParse(body);
 
   if (!success) {
-    c.status(411);
+    c.status(400);
     return c.json({
       message: "the inputs are incorrect",
     });
@@ -81,13 +81,13 @@ userRouter.post("/signin", async (c) => {
   });
 
   if (!user) {
-    c.status(401);
+    c.status(400);
     return c.json({ message: "User not found" });
   }
 
   const validPassword = bcrypt.compareSync(body.password, user.password);
   if (!validPassword) {
-    c.status(401);
+    c.status(400);
     return c.json({ message: "The password is incorrect" });
   }
 
@@ -104,7 +104,7 @@ userRouter.post("/signin", async (c) => {
     });
 
     if (!userDoc) {
-      c.status(401);
+      c.status(400);
       return c.json({ message: "The credentials must be wrong" });
     }
 
@@ -122,7 +122,7 @@ userRouter.post("/signin", async (c) => {
     return c.json({ message: "signin successful !", userDoc });
   } catch (e) {
     console.log(e);
-    c.status(402);
+    c.status(501);
     return c.json({ message: "Try again(smt Went wrong)" });
   }
 });
@@ -130,7 +130,7 @@ userRouter.post("/signin", async (c) => {
 userRouter.use("*", async (c, next) => {
   const authHeader = getCookie(c, "token");
   if (!authHeader) {
-    c.status(403);
+    c.status(401);
     return c.json({ message: "Please log in" });
   }
   try {
@@ -166,7 +166,7 @@ userRouter.get("/auth", async (c) => {
     c.status(200);
     return c.json({ userDoc });
   } catch (e) {
-    c.status(402);
+    c.status(401);
     return c.json({ message: "User not logged in" });
   }
 });
@@ -219,7 +219,7 @@ userRouter.put("/update", async (c) => {
     return c.json({ message: "updated successfully" });
   } catch (e) {
     console.log(e);
-    c.status(412);
+    c.status(501);
     return c.json({ message: "Unable to update profile" });
   }
 });
@@ -238,7 +238,7 @@ userRouter.post("/logout", async (c) => {
     c.status(200);
     return c.json({ message: "logged out successfully" });
   } catch (e) {
-    c.status(412);
+    c.status(501);
     return c.json({ message: "Unable to logout" });
   }
 });

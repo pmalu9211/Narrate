@@ -30,7 +30,7 @@ blogRouter.get("/bulk", async (c) => {
     });
   } catch (e) {
     console.log(e);
-    c.status(400);
+    c.status(501);
     return c.json({
       message: "couldn't fetch",
     });
@@ -40,7 +40,7 @@ blogRouter.get("/bulk", async (c) => {
 blogRouter.use("*", async (c, next) => {
   const authHeader = getCookie(c, "token");
   if (!authHeader) {
-    c.status(403);
+    c.status(401);
     return c.json({ message: "not logged in" });
   }
   try {
@@ -64,9 +64,25 @@ blogRouter.post("/upload", async (c) => {
   const { success } = createBlogInput.safeParse(body);
 
   if (!success) {
-    c.status(411);
+    c.status(400);
     return c.json({
       message: "the inputs are incorrect",
+    });
+  }
+  if (body.title.length < 5) {
+    c.status(301);
+    return c.json({
+      message:
+        "title is too short min 5 characters, current characters " +
+        body.title.length,
+    });
+  }
+  if (body.content.length < 16) {
+    c.status(301);
+    return c.json({
+      message:
+        "Content should be greater than 15 characters you have " +
+        body.content.length,
     });
   }
   const prisma = new PrismaClient({
@@ -92,7 +108,7 @@ blogRouter.post("/upload", async (c) => {
     });
   } catch (e) {
     console.log(e);
-    c.status(400);
+    c.status(501);
     return c.json({
       message: "couldn't post",
     });
@@ -105,7 +121,7 @@ blogRouter.put("/update", async (c) => {
   const { success } = updateBlogInput.safeParse(body);
 
   if (!success) {
-    c.status(411);
+    c.status(400);
     return c.json({
       message: "the inputs are incorrect",
     });
@@ -113,6 +129,23 @@ blogRouter.put("/update", async (c) => {
   const prisma = new PrismaClient({
     datasourceUrl: c.env?.DATABASE_URL,
   }).$extends(withAccelerate());
+
+  if (body.title.length < 5) {
+    c.status(301);
+    return c.json({
+      message:
+        "title is too short min 5 characters, current characters " +
+        body.title.length,
+    });
+  }
+  if (body.content.length < 16) {
+    c.status(301);
+    return c.json({
+      message:
+        "Content should be greater than 15 characters you have " +
+        body.content.length,
+    });
+  }
 
   try {
     const doc = await prisma.blog.update({
@@ -132,7 +165,7 @@ blogRouter.put("/update", async (c) => {
     });
   } catch (e) {
     console.log(e);
-    c.status(400);
+    c.status(501);
     return c.json({
       message: "couldn't update",
     });
@@ -170,7 +203,7 @@ blogRouter.get("/:id", async (c) => {
     });
   } catch (e) {
     console.log(e);
-    c.status(400);
+    c.status(501);
     return c.json({
       message: "couldn't fetch",
     });
@@ -196,7 +229,7 @@ blogRouter.delete("/:id", async (c) => {
     });
   } catch (e) {
     console.log(e);
-    c.status(400);
+    c.status(501);
     return c.json({
       message: "couldn't delete",
     });

@@ -6,10 +6,10 @@ import { currentUser, showSiginCard } from "../recoil/state";
 import { useMemo, useState } from "react";
 import { Loader } from "./Loader";
 import { notifyError, notifySuccess } from "../toast/toast";
+
 export const Navbar = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  // const userValT = useRecoilValue(user);
   const [currentUserVal, setCurrentUser] = useRecoilState(currentUser);
   const setShowSiginCard = useSetRecoilState(showSiginCard);
   let postRedirect = useMemo(() => {
@@ -32,7 +32,6 @@ export const Navbar = () => {
     }
   };
 
-  // if (userVal.state === "hasError") return <div>Loading...</div>;
   return (
     <>
       {Loading && <Loader />}
@@ -48,7 +47,7 @@ export const Navbar = () => {
               setShowSiginCard(true);
             }
           }}
-          className="font-poppins text-2xl border-2 border-black rounded-full py-2 sm:px-6 px-4 font-semibold m-auto shadow-stone-300 shadow-lg hover:bg-black hover:text-white "
+          className="font-poppins text-2xl border-2 border-black rounded-full py-2 sm:px-6 px-4 font-semibold m-auto shadow-stone-300 shadow-lg hover:bg-black hover:text-white invisible w-0 md:w-28 md:visible"
         >
           post
         </Link>
@@ -67,7 +66,7 @@ export const Navbar = () => {
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="size-8 hidden sm:visible"
+              className="size-8 invisible w-0 sm:w-full sm:visible"
             >
               <path
                 strokeLinecap="round"

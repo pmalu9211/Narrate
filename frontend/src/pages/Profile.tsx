@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { BlogComp } from "../components/BlogComp";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { Blog, UserInterface } from "../types";
-import { useNavigate } from "react-router-dom";
 import { Loader } from "../components/Loader";
 import { notifyError, notifySuccess } from "../toast/toast";
+import { FunctionalButton } from "../components/FunctionalButton";
 
 export const Profile = () => {
   const [blogs, setBlogs]: [Blog[], any] = useState([]);
@@ -12,8 +12,6 @@ export const Profile = () => {
   const [name, setName] = useState("");
   const [about, setAbout] = useState("");
   const [Loading, setLoading] = useState(false);
-
-  // const navigate = useNavigate();
 
   const getProfile = async () => {
     try {
@@ -24,9 +22,10 @@ export const Profile = () => {
       setName(response.data.userDoc.name);
       setAbout(response.data.userDoc.about);
       setLoading(false);
-    } catch (e) {
+    } catch (e: any) {
       setLoading(false);
       console.log(e);
+      notifyError(e.response.data.message);
     }
   };
 
@@ -42,7 +41,7 @@ export const Profile = () => {
       console.log(e);
       notifyError(e.response.data.message);
     }
-  }; //TODO: updateProfile
+  };
 
   useEffect(() => {
     getProfile();
@@ -50,8 +49,11 @@ export const Profile = () => {
 
   return (
     <>
+      <div className="md:hidden">
+        <FunctionalButton />
+      </div>
       {Loading && <Loader />}
-      <div className="grid lg:grid-cols-3 grid-cols-1 lg:w-full  md:w-8/12 mx-auto">
+      <div className="grid lg:grid-cols-3 grid-cols-1 lg:w-full  md:w-8/12 mx-auto ">
         <form className="p-4">
           <div className="text-5xl font-extralight font-playwrite text-center mt-8">
             Profile
@@ -98,9 +100,15 @@ export const Profile = () => {
           </button>
         </form>
         <div className="min-h-screen font-poppins p-4 col-span-2 ">
-          {blogs.map((blog: Blog) => {
-            return <BlogComp key={blog.id} blog={blog} />;
-          })}
+          {blogs.length === 0 ? (
+            <div className="text-4xl text-center mt-32 font-playwrite">
+              Narrate your first story to see here
+            </div>
+          ) : (
+            blogs.map((blog: Blog) => {
+              return <BlogComp key={blog.id} blog={blog} />;
+            })
+          )}
         </div>
       </div>
     </>
