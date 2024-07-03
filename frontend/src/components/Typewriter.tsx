@@ -3,9 +3,12 @@ import { TypeAnimation } from "react-type-animation";
 export const Typewriter = () => {
   return (
     <>
-      <div className="bg-black text-white text-4xl p-5 flex items-center min-h-screen h-full justify-center">
+      <div
+        className="bg-black text-white text-4xl p-5 flex items-center
+        max-h-screen justify-center overflow-hidden"
+      >
         <div className="max-w-3xl w-full">
-          <div className="text-center">
+          <div className="py-12 text-center min-h-96">
             <span className="font-poppins font-bold text-5xl block mb-2">
               Narrate
             </span>

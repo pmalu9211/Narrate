@@ -112,11 +112,11 @@ export const Post = () => {
               className="w-full border border-gray-300 rounded-2xl px-3 py-3 my-2 font-poppins text-xl"
               value={content}
             />
-            <div className="md:flex">
+            <div className="flex justify-center ">
               <div className="ml-4 text-3xl mt-4">Reading time (mins)</div>
               <input
                 onChange={(e) => setReadingTime(Number(e.target.value))}
-                className="border border-gray-300 ml-3 rounded-lg px-3 py-3 my-2 font-poppins text-xl"
+                className="border border-gray-300 ml-3 rounded-lg px-3 py-3 my-2 font-poppins text-xl max-w-20"
                 type="number"
                 value={readingTime}
               />
