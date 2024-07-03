@@ -76,6 +76,8 @@ export const Post = () => {
 
   const deleteHandler = async (e: any) => {
     e.preventDefault();
+    const confirm = window.confirm("Delete the blog");
+    if (!confirm) return;
     try {
       setLoading(true);
       const response = await axios.delete("/blog/" + blogId);
@@ -122,7 +124,7 @@ export const Post = () => {
               />
             </div>
             {pathname.split("/")[1] == "profile" ? (
-              <div className="grid grid-cols-2 gap-8 px-12">
+              <div className="grid grid-cols-2 gap-8 px-2 sm:px-12">
                 <button className="mt-8" onClick={(e) => editHandler(e)}>
                   Edit
                 </button>
