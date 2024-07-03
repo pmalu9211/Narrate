@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { BlogComp } from "../components/BlogComp";
 import axios from "axios";
-import { Blog, UserInterface } from "../types";
+import { Blog } from "../types";
 import { SiginCard } from "../components/SigninCard";
 import { currentUser, showSiginCard } from "../recoil/state";
 import { useRecoilState } from "recoil";

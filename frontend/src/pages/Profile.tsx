@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { BlogComp } from "../components/BlogComp";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { Blog, UserInterface } from "../types";
 import { Loader } from "../components/Loader";
 import { notifyError, notifySuccess } from "../toast/toast";
