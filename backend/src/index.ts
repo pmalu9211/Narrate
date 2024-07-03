@@ -12,7 +12,7 @@ const app = new Hono<{
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://narrate.prathamalu.xyz",
     // allowHeaders: ["X-Custom-Header", "Upgrade-Insecure-Requests"],
     allowMethods: ["POST", "GET", "PUT", "DELETE"],
     credentials: true,
