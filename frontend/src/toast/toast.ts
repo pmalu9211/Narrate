@@ -2,11 +2,10 @@ import { Bounce, toast } from "react-toastify";
 
 export const notifyError = (message: string) =>
   toast.error(message, {
-    position: "top-center",
+    position: "top-right",
     autoClose: 5000,
     hideProgressBar: false,
     closeOnClick: true,
-    pauseOnHover: true,
     draggable: true,
     theme: "dark",
     transition: Bounce,
@@ -14,11 +13,10 @@ export const notifyError = (message: string) =>
 
 export const notifySuccess = (message: string) =>
   toast.success(message, {
-    position: "top-center",
+    position: "top-right",
     autoClose: 5000,
     hideProgressBar: false,
     closeOnClick: true,
-    pauseOnHover: true,
     draggable: true,
     theme: "dark",
     transition: Bounce,
