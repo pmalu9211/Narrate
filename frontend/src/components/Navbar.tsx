@@ -35,11 +35,10 @@ export const Navbar = () => {
   return (
     <>
       {Loading && <Loader />}
-      <div className="grid grid-cols-3 gap-4 max-w-screen py-6 px-2 sm:px-4  border-black items-center ">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-screen py-6 px-2 sm:px-4  border-black items-center fixed top-0 filter backdrop-filter backdrop-blur-lg rounded-b-md">
         <Link to={"/"} className="font-poppins font-bold text-4xl  ">
           Narrate
         </Link>
-
         <Link
           to={postRedirect}
           onClick={() => {
@@ -47,7 +46,7 @@ export const Navbar = () => {
               setShowSiginCard(true);
             }
           }}
-          className="font-poppins text-2xl border-2 border-black rounded-full py-2 sm:px-6 px-4 font-semibold m-auto shadow-stone-300 shadow-lg hover:bg-black hover:text-white invisible w-0 md:w-28 md:visible"
+          className="font-poppins text-2xl border-2 border-black rounded-full py-2 sm:px-6 px-4 font-semibold m-auto shadow-stone-300 shadow-lg hover:bg-black hover:text-white invisible w-0 md:w-28 md:visible absolute sm:static "
         >
           post
         </Link>

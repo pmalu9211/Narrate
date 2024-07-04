@@ -6,7 +6,9 @@ export const PageLayout = () => {
   return (
     <>
       <Navbar></Navbar>
-      <Outlet></Outlet>
+      <div className="mt-[100px]">
+        <Outlet></Outlet>
+      </div>
       <Footer></Footer>
     </>
   );

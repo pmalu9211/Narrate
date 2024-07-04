@@ -38,7 +38,7 @@ export const SigninForm = () => {
     <>
       {Loading && <Loader />}
       <div className="flex flex-col m-8 ">
-        <form className="border-2 border-black rounded-2xl p-8 m-4 my-auto">
+        <form className="border-2 bg-white border-black rounded-2xl p-8 m-4 my-auto">
           <div className="text-center text-3xl font-semibold font-playwrite ">
             Sign In
           </div>
@@ -60,8 +60,8 @@ export const SigninForm = () => {
             className=""
             type="text"
           />
-          <div className="flex gap-2 font-poppins">
-            <div>Not registered?</div>
+          <div className="flex gap-2 font-poppins my-2">
+            <Link to={"/signup"}>Not registered?</Link>
             <Link className="underline" to={"/signup"}>
               {" "}
               SignUp

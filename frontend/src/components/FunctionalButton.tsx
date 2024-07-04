@@ -42,6 +42,7 @@ export const FunctionalButton = () => {
         <Link
           to={postRedirect}
           onClick={() => {
+            setIsRotated((e) => !e);
             if (!currentUserVal) {
               setShowSiginCard(true);
             }
@@ -54,6 +55,7 @@ export const FunctionalButton = () => {
           <Link
             to={"/profile"}
             className="px-4 bg-black block font-poppins text-2xl border-2 border-black rounded-full py-2 mx-auto font-semibold"
+            onClick={() => setIsRotated((e) => !e)}
           >
             Profile
           </Link>
@@ -61,6 +63,7 @@ export const FunctionalButton = () => {
           <Link
             to={"/"}
             className="px-4 bg-black block font-poppins text-2xl border-2 border-black rounded-full py-2 mx-auto font-semibold"
+            onClick={() => setIsRotated((e) => !e)}
           >
             Home
           </Link>

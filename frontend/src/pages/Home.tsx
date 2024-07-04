@@ -15,16 +15,17 @@ export const Home = () => {
     useRecoilState<boolean>(showSiginCard);
   const [currentUserVal, setCurrentUserVal] = useRecoilState(currentUser);
   const [Loading, setLoading] = useState(false);
+  const [LoadingBlogs, setLoadingBlogs] = useState(false);
 
   const getBlogs = async () => {
     try {
-      setLoading(true);
+      setLoadingBlogs(true);
       const response = await axios("/blog/bulk");
       setBlogs(response.data.doc);
-      setLoading(false);
+      setLoadingBlogs(false);
     } catch (e: any) {
       console.log(e);
-      setLoading(false);
+      setLoadingBlogs(false);
       notifyError(e.response.data.message);
     }
   };
@@ -50,7 +51,7 @@ export const Home = () => {
 
   return (
     <>
-      {Loading && <Loader />}
+      {(Loading || LoadingBlogs) && <Loader />}
       {showSiginCardVal && <SiginCard />}
       <div className="md:hidden">
         <FunctionalButton />
