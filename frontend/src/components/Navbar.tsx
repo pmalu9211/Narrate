@@ -57,7 +57,7 @@ export const Navbar = () => {
         ) : currentUserVal ? (
           <Link
             to={"/profile"}
-            className=" sm:ml-auto flex gap-2 py-2 px-4 font-poppins border border-gray-400 rounded-3xl min-w-1 "
+            className=" ml-auto flex gap-2 py-2 px-4 font-poppins border border-gray-400 rounded-3xl min-w-1 "
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
