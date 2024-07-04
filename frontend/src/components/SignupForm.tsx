@@ -48,23 +48,24 @@ export const SignupForm = () => {
             className=""
             type="text"
           />
-          <label htmlFor="Name"> Email</label>
+          <label htmlFor="Email"> Email</label>
           <input
             onChange={(e) => {
               setEmail(e.target.value);
             }}
             value={email}
             className=""
-            type="text"
+            type="email"
+            name="Email"
           />
-          <label htmlFor="Name"> Password</label>
+          <label htmlFor="password"> Password</label>
           <input
             onChange={(e) => {
               setPassword(e.target.value);
             }}
             value={password}
             className=""
-            type="text"
+            type="password"
           />
           <div className="flex gap-2 font-poppins">
             <div>Already registered?</div>

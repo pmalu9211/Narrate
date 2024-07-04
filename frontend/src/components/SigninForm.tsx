@@ -58,7 +58,7 @@ export const SigninForm = () => {
             }}
             value={password}
             className=""
-            type="text"
+            type="password"
           />
           <div className="flex gap-2 font-poppins my-2">
             <Link to={"/signup"}>Not registered?</Link>

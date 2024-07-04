@@ -18,6 +18,7 @@ export const userRouter = new Hono<{
 
 userRouter.post("/signup", async (c) => {
   const body = await c.req.json();
+  body.email = body.email.toLowerCase();
   const { success } = signupInput.safeParse(body);
 
   if (!success) {
@@ -62,6 +63,7 @@ userRouter.post("/signup", async (c) => {
 
 userRouter.post("/signin", async (c) => {
   const body = await c.req.json();
+  body.email = body.email.toLowerCase();
   const { success } = signinInput.safeParse(body);
 
   if (!success) {
