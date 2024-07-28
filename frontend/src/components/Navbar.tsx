@@ -35,7 +35,7 @@ export const Navbar = () => {
   return (
     <>
       {Loading && <Loader />}
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-screen py-6 px-2 sm:px-4  border-black items-center fixed top-0 filter backdrop-filter backdrop-blur-lg rounded-b-md">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-screen py-6 px-2 sm:px-4  border-black items-center fixed top-0 filter backdrop-filter backdrop-blur-lg rounded-b-md shadow-lg">
         <Link to={"/"} className="font-poppins font-bold text-4xl  ">
           Narrate
         </Link>

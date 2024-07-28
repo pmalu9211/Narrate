@@ -57,7 +57,7 @@ export const Home = () => {
         <FunctionalButton />
       </div>
       <div className="min-h-screen font-poppins p-4">
-        {blogs.map((blog: Blog) => {
+        {blogs?.map((blog: Blog) => {
           return (
             <div
               onClick={() => {
